@@ -143,7 +143,13 @@ namespace sly.parser.generator.visitor
                         if (method == null) method = node.Visitor;
                         var t = method.Invoke(ParserVsisitorInstance, args.ToArray());
                         var res = (OUT) t;
+                        
                         result = SyntaxVisitorResult<IN, OUT>.NewValue(res);
+                        if (node.IsChoice)
+                        {
+                            GroupItem<IN,OUT> item = new GroupItem<IN, OUT>("",res);
+                            result = SyntaxVisitorResult<IN, OUT>.ChoiceResult(item);
+                        }
                     }
                     catch (Exception e)
                     {
