@@ -28,6 +28,8 @@ namespace sly.parser.syntax.tree
         public bool Discarded => false;
         public string Name { get; set; }
 
+        public bool IsChoice { get; set; }
+
         #region expression syntax nodes
 
         public OperationMetaData<IN> Operation { get; set; } = null;

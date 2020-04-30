@@ -2,6 +2,9 @@ using sly.lexer;
 
 namespace ParserExample
 {
+    
+    
+    
     public enum Issue165Lexer
     {
         [Lexeme(GenericToken.SugarToken,"?")]

@@ -211,6 +211,25 @@ namespace ParserTests
             return c.Value;
         }
     }
+
+    public class AlternateChoiceTestMixed
+    {
+        [Production("choice : [ A | b | c]")]
+        public string Choice(GroupItem<OptionTestToken,string> choice)
+        {
+            string v = choice.Match(
+                (string name, Token<OptionTestToken> token) => token.Value,
+                (string nameof, string value) => value
+            );
+            return v;
+        }
+        
+        [Production("A : a")]
+        public string A(Token<OptionTestToken> a)
+        {
+            return a.Value;
+        }
+    }
     
     public class AlternateChoiceTestZeroOrMoreTerminal
     {
@@ -295,9 +314,11 @@ namespace ParserTests
     public class AlternateChoiceTestNonTerminal
     {
         [Production("choice : [ A | B | C]")]
-        public string Choice(string c)
+        public string Choice(GroupItem<OptionTestToken,string> c)
         {
-            return c;
+            var cc = c.Match(((name, token) => token.Value),
+                (name, value) => value);
+            return cc;
         }
 
         [Production("C : c")]
@@ -323,9 +344,12 @@ namespace ParserTests
     public class AlternateChoiceTestOneOrMoreNonTerminal
     {
         [Production("choice : [ A | B | C]+")]
-        public string Choice(List<String> choices)
+        public string Choice(List<GroupItem<OptionTestToken,string>> choices)
         {
-            return string.Join(" ", choices);
+            var values = choices.Select(c => c.Match((name, token) => token.Value,
+                (name, value) => value)
+            ).ToList();
+            return string.Join(" ", values);
         }
 
         [Production("C : c")]
@@ -883,6 +907,28 @@ namespace ParserTests
         }
         
         [Fact]
+        public void TestAlternateChoiceMixed()
+        {
+            var startingRule = $"choice";
+            var parserInstance = new AlternateChoiceTestMixed();
+            var builder = new ParserBuilder<OptionTestToken, string>();
+            var builtParser = builder.BuildParser(parserInstance, ParserType.EBNF_LL_RECURSIVE_DESCENT, startingRule);
+            Assert.False(builtParser.IsError);
+            Assert.False(builtParser.Errors.Any());
+            var parseResult = builtParser.Result.Parse("a", "choice");
+            Assert.True(parseResult.IsOk);
+            Assert.Equal("a",parseResult.Result);
+            parseResult = builtParser.Result.Parse("b", "choice");
+            Assert.True(parseResult.IsOk);
+            Assert.Equal("b",parseResult.Result);
+            parseResult = builtParser.Result.Parse("c", "choice");
+            Assert.True(parseResult.IsOk);
+            Assert.Equal("c",parseResult.Result);
+            parseResult = builtParser.Result.Parse("d", "choice");
+            Assert.False(parseResult.IsOk);
+        }
+        
+        [Fact]
         public void TestAlternateChoiceNonTerminal()
         {
             var startingRule = $"choice";
@@ -994,18 +1040,18 @@ namespace ParserTests
 
         }
 
-        [Fact]
-        public void TestAlternateChoiceErrorMixedTerminalAndNonTerminal()
-        {
-            var startingRule = $"choice";
-            var parserInstance = new AlternateChoiceTestError();
-            var builder = new ParserBuilder<OptionTestToken, string>();
-            var builtParser = builder.BuildParser(parserInstance, ParserType.EBNF_LL_RECURSIVE_DESCENT, startingRule);
-            Assert.True(builtParser.IsError);
-            Assert.Equal(2,builtParser.Errors.Count);
-            Assert.Contains("mixed", builtParser.Errors[0].Message);
-            Assert.Contains("discarded", builtParser.Errors[1].Message);
-            
-        }
+        // [Fact]
+        // public void TestAlternateChoiceErrorMixedTerminalAndNonTerminal()
+        // {
+        //     var startingRule = $"choice";
+        //     var parserInstance = new AlternateChoiceTestError();
+        //     var builder = new ParserBuilder<OptionTestToken, string>();
+        //     var builtParser = builder.BuildParser(parserInstance, ParserType.EBNF_LL_RECURSIVE_DESCENT, startingRule);
+        //     Assert.True(builtParser.IsError);
+        //     Assert.Equal(2,builtParser.Errors.Count);
+        //     Assert.Contains("mixed", builtParser.Errors[0].Message);
+        //     Assert.Contains("discarded", builtParser.Errors[1].Message);
+        //     
+        // }
     }
 }

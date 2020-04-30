@@ -15,6 +15,8 @@ namespace sly.parser.syntax.tree
         public Token<IN> Token { get;  }
         public bool Discarded { get; }
         public string Name => Token.TokenID.ToString();
+        
+        public bool IsChoice { get; set; }
 
     }
 }

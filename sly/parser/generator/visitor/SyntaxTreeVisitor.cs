@@ -26,6 +26,10 @@ namespace sly.parser.generator.visitor
 
         public OUT ValueResult;
 
+        public GroupItem<IN, OUT> ChoiceValue;
+
+        public bool IsChoice => ChoiceValue != null;
+
         public bool IsOption => OptionResult != null;
         public bool IsOptionGroup => OptionGroupResult != null;
 
@@ -123,6 +127,13 @@ namespace sly.parser.generator.visitor
         public static SyntaxVisitorResult<IN, OUT> NoneResult()
         {
             var res = new SyntaxVisitorResult<IN, OUT>();
+            return res;
+        }
+
+        public static SyntaxVisitorResult<IN, OUT> ChoiceResult(GroupItem<IN, OUT> choice)
+        {
+            var res = new SyntaxVisitorResult<IN, OUT>();
+            res.ChoiceValue = choice;
             return res;
         }
     }

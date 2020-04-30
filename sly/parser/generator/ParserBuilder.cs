@@ -343,8 +343,8 @@ namespace sly.parser.generator
                     {
                         if (!choice.IsTerminalChoice && !choice.IsNonTerminalChoice)
                         {
-                            result.AddError(new ParserInitializationError(ErrorLevel.ERROR,
-                                $"{rule.RuleString} contains {choice.ToString()} with mixed terminal and nonterminal."));
+                            //result.AddError(new ParserInitializationError(ErrorLevel.ERROR,
+                             //   $"{rule.RuleString} contains {choice.ToString()} with mixed terminal and nonterminal."));
                         }
                         else if (choice.IsDiscarded && choice.IsNonTerminalChoice)
                         {

@@ -5,5 +5,7 @@
         
         bool Discarded { get;  }
         string Name { get; }
+        
+        bool IsChoice { get; set; }
     }
 }

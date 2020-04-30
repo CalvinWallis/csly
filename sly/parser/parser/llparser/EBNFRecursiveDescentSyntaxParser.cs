@@ -506,6 +506,7 @@ namespace sly.parser.llparser
                         result.Root = discardedToken;
                     }
 
+                    result.Root.IsChoice = true;
                     return result;
                 }
             }

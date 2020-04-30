@@ -120,6 +120,10 @@ namespace sly.parser.generator.visitor
                     {
                         args.Add(v.GroupListResult);
                     }
+                    else if (v.IsChoice)
+                    {
+                        args.Add(v.ChoiceValue);
+                    }
                 }
 
                 if (node.IsByPassNode)
@@ -146,6 +150,11 @@ namespace sly.parser.generator.visitor
                         Console.WriteLine($"OUTCH {e.Message} calling {node.Name} =>  {method.Name}");
                     }
                 }
+            }
+            if (node.IsChoice)
+            {
+                var item = new GroupItem<IN, OUT>("",result.ValueResult);
+                return SyntaxVisitorResult<IN, OUT>.ChoiceResult(item);
             }
 
             return result;
@@ -188,6 +197,11 @@ namespace sly.parser.generator.visitor
 
         private SyntaxVisitorResult<IN, OUT> Visit(SyntaxLeaf<IN> leaf)
         {
+            if (leaf.IsChoice)
+            {
+                var item = new GroupItem<IN, OUT>("",leaf.Token);
+                return SyntaxVisitorResult<IN, OUT>.ChoiceResult(item);
+            }
             return SyntaxVisitorResult<IN, OUT>.NewToken(leaf.Token);
         }
     }
