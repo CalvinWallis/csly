@@ -70,6 +70,18 @@ namespace sly.parser.generator.visitor
             res.IsValueList = true;
             return res;
         }
+        
+        public static SyntaxVisitorResult<IN, OUT> NewChoiceList(List<GroupItem<IN,OUT>> values)
+        {
+            var res = new SyntaxVisitorResult<IN, OUT>();
+            res.ChoiceListResult = values;
+            res.IsChoiceList = true;
+            return res;
+        }
+
+        public bool IsChoiceList { get; set; }
+
+        public List<GroupItem<IN, OUT>> ChoiceListResult { get; set; }
 
         public static SyntaxVisitorResult<IN, OUT> NewGroupList(List<Group<IN, OUT>> values)
         {

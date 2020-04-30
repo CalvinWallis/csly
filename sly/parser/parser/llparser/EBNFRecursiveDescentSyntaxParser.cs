@@ -313,8 +313,9 @@ namespace sly.parser.llparser
                 }
                 else if (innerClause is ChoiceClause<IN> choice)
                 {
-                    manyNode.IsManyTokens = choice.IsTerminalChoice;
-                    manyNode.IsManyValues = choice.IsNonTerminalChoice;
+                    manyNode.IsManyTokens = false;
+                    manyNode.IsManyValues = false;
+                    manyNode.IsManyChoice = true;
                     innerResult = ParseChoice(tokens, choice, currentPosition);
                 }
                 else
@@ -371,8 +372,9 @@ namespace sly.parser.llparser
             }
             else if (innerClause is ChoiceClause<IN> choice)
             {
-                manyNode.IsManyTokens = choice.IsTerminalChoice;
-                manyNode.IsManyValues = choice.IsNonTerminalChoice;
+                manyNode.IsManyTokens = false;
+                manyNode.IsManyValues = false;
+                manyNode.IsManyChoice = true;
                 firstInnerResult = ParseChoice(tokens, choice, currentPosition);
             }
             else

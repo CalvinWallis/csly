@@ -13,6 +13,7 @@ namespace sly.parser.syntax.tree
         public bool IsManyValues { get; set; }
 
         public bool IsManyGroups { get; set; }
+        public bool IsManyChoice { get; set; }
 
 
         public void Add(ISyntaxNode<IN> child)

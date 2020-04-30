@@ -120,6 +120,10 @@ namespace sly.parser.generator.visitor
                     {
                         args.Add(v.GroupListResult);
                     }
+                    else if (v.IsChoiceList)
+                    {
+                        args.Add(v.ChoiceListResult);
+                    }
                     else if (v.IsChoice)
                     {
                         args.Add(v.ChoiceValue);
@@ -188,6 +192,12 @@ namespace sly.parser.generator.visitor
                 var vals = new List<OUT>();
                 values.ForEach(v => vals.Add(v.ValueResult));
                 result = SyntaxVisitorResult<IN, OUT>.NewValueList(vals);
+            }
+            else if (node.IsManyChoice)
+            {
+                var vals = new List<GroupItem<IN,OUT>>();
+                values.ForEach(v => vals.Add(v.ChoiceValue));
+                result = SyntaxVisitorResult<IN, OUT>.NewChoiceList(vals);
             }
             else if (node.IsManyGroups)
             {

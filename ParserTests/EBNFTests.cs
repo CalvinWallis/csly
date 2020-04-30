@@ -346,9 +346,23 @@ namespace ParserTests
         [Production("choice : [ A | B | C]+")]
         public string Choice(List<GroupItem<OptionTestToken,string>> choices)
         {
-            var values = choices.Select(c => c.Match((name, token) => token.Value,
-                (name, value) => value)
-            ).ToList();
+            List<string> values = new List<string>();
+            foreach (var choice in choices)
+            {
+                var v = choice.Match((name, token) =>
+                    {
+                        return token.Value;
+                    },
+                    (name, value) =>
+                    {
+                        return value;
+                    });
+                values.Add(v);
+            }
+            
+            // var values = choices.Select(c => c.Match((name, token) => token.Value,
+            //     (name, value) => value)
+            // ).ToList();
             return string.Join(" ", values);
         }
 
