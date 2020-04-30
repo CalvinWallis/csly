@@ -243,28 +243,28 @@ namespace ParserTests
     public class AlternateChoiceTestOneOrMoreTerminal
     {
         [Production("choice : [ a | b | c]+")]
-        public string Choice(List<Token<OptionTestToken>> list)
+        public string Choice(List<GroupItem<OptionTestToken,string>> list)
         {
-            return string.Join(",", list.Select(x => x.Value));
+            return string.Join(",", list.Select(x => x.Token.Value));
         }
     }
 
     public class AlternateChoiceTestOptionTerminal
     {
         [Production("choice : [ a | b | c] [ b | c]?")]
-        public string Choice(Token<OptionTestToken> first, Token<OptionTestToken> next)
+        public string Choice(GroupItem<OptionTestToken,string> first, GroupItem<OptionTestToken,string> next)
         {
             StringBuilder builder = new StringBuilder();
             builder.Append(first.Value);
 
-            if (next.IsEmpty)
-            {
-                builder.Append($",<none>");
-            }
-            else
-            {
-                builder.Append($",{next.Value}");
-            }
+            // if (next.IsEmpty)
+            // {
+            //     builder.Append($",<none>");
+            // }
+            // else
+            // {
+            //     builder.Append($",{next.Value}");
+            // }
             
             return builder.ToString();
         }
@@ -273,10 +273,10 @@ namespace ParserTests
     public class AlternateChoiceTestOptionDiscardedTerminal
     {
         [Production("choice : [ a | b | c] [ b | c] [d]")]
-        public string Choice(Token<OptionTestToken> first)
+        public string Choice(GroupItem<OptionTestToken,string> first)
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append(first.Value);
+            builder.Append(first.Token.Value);
 
             
             return builder.ToString();
@@ -286,15 +286,15 @@ namespace ParserTests
     public class AlternateChoiceTestError
     {
         [Production("choice : [ a | b | C | D]")]
-        public string Choice(Token<OptionTestToken> c)
+        public string Choice(GroupItem<OptionTestToken,string> c)
         {
-            return c.Value;
+            return c.Token.Value;
         }
         
         [Production("D : [ E | C] [d]")]
-        public string D(Token<OptionTestToken> d)
+        public string D(GroupItem<OptionTestToken,string> d)
         {
-            return d.Value;
+            return d.Token.Value;
         }
         
         [Production("E : e")]
