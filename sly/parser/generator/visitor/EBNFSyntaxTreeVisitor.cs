@@ -161,11 +161,11 @@ namespace sly.parser.generator.visitor
                     }
                 }
             }
-            if (node.IsChoice)
-            {
-                var item = new GroupItem<IN, OUT>("",result.ValueResult);
-                return SyntaxVisitorResult<IN, OUT>.ChoiceResult(item);
-            }
+            // if (node.IsChoice)
+            // {
+            //     var item = new GroupItem<IN, OUT>("",result.ValueResult);
+            //     return SyntaxVisitorResult<IN, OUT>.ChoiceResult(item);
+            // }
 
             return result;
         }
